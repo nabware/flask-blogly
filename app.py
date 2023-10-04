@@ -61,10 +61,31 @@ def add_new_user():
     return redirect("/users")
 
 
-@app.get("/user/<int:user_id>")
+@app.get("/users/<int:user_id>")
 def user(user_id):
     """render user profile page"""
 
     user = User.query.get_or_404(user_id)
 
     return render_template("user.html", user=user)
+
+
+@app.get("/users/<int:user_id>/edit")
+def edit_user(user_id):
+    """Show the edit page for a user"""
+
+    user = User.query.get_or_404(user_id)
+
+    return render_template("edit.html", user=user)
+
+
+@app.post("/users/<int:user_id>/delete")
+def delete_user(user_id):
+    """Show the edit page for a user"""
+
+    user = User.query.get_or_404(user_id)
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return redirect('/users')

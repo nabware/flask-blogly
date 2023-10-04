@@ -6,7 +6,11 @@
 
 <img src="{{ user.image_url }}">
 <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+
 <button>Edit</button>
-<button>Delete</button>
+
+<form action="/users/{{user.id}}/delete" method="POST">
+  <button type="submit">Delete</button>
+</form>
 
 {% endblock %}
