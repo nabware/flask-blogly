@@ -56,7 +56,11 @@ def add_new_user():
     )
 
     db.session.add(new_user)
-    db.session.commit()
+
+    try:
+        db.session.commit()
+    except:
+        return redirect(f"/users/new?firstName={first_name}&lastName={last_name}&imageURL={image_url}")
 
     return redirect("/users")
 
@@ -71,7 +75,7 @@ def user(user_id):
 
 
 @app.get("/users/<int:user_id>/edit")
-def edit_user(user_id):
+def edit_user_form(user_id):
     """Show the edit page for a user"""
 
     user = User.query.get_or_404(user_id)
@@ -79,9 +83,27 @@ def edit_user(user_id):
     return render_template("edit.html", user=user)
 
 
+@app.post("/users/<int:user_id>/edit")
+def edit_user(user_id):
+    """Process the edit form, returning the user to the /users page."""
+
+    first_name = request.form.get("firstName")
+    last_name = request.form.get("lastName")
+    image_url = request.form.get("imageURL")
+
+    user = User.query.get_or_404(user_id)
+    user.first_name = first_name
+    user.last_name = last_name
+    user.image_url = image_url
+
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
+
+
 @app.post("/users/<int:user_id>/delete")
 def delete_user(user_id):
-    """Show the edit page for a user"""
+    """Delete the user."""
 
     user = User.query.get_or_404(user_id)
 

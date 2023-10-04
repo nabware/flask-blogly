@@ -8,15 +8,15 @@
 
 <form action="/users/new" method="POST">
   <label>First Name</label>
-  <input type="text" name="firstName" placeholder="Enter a first name">
+  <input type="text" name="firstName" placeholder="Enter a first name" value="{{ request.args.get('firstName', '') }}">
   <br>
 
   <label>Last Name</label>
-  <input type="text" name="lastName" placeholder="Enter a last name">
+  <input type="text" name="lastName" placeholder="Enter a last name" value="{{ request.args.get('lastName', '') }}">
   <br>
 
   <label>Image URL</label>
-  <input type="text" name="imageURL" placeholder="Provide an image of this user">
+  <input type="text" name="imageURL" placeholder="Provide an image of this user" value="{{ request.args.get('imageURL', '') }}">
   <br>
 
   <button type="submit">Add</button>

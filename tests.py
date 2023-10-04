@@ -1,11 +1,10 @@
+from models import DEFAULT_IMAGE_URL, User
+from app import app, db
+from unittest import TestCase
 import os
 
 os.environ["DATABASE_URL"] = "postgresql:///blogly_test"
 
-from unittest import TestCase
-
-from app import app, db
-from models import DEFAULT_IMAGE_URL, User
 
 # Make Flask errors be real errors, rather than HTML pages with error info
 app.config['TESTING'] = True
@@ -58,3 +57,40 @@ class UserViewTestCase(TestCase):
             html = resp.get_data(as_text=True)
             self.assertIn("test1_first", html)
             self.assertIn("test1_last", html)
+
+    def test_home_page(self):
+        with app.test_client() as c:
+            resp = c.get("/")
+
+            self.assertEqual(resp.status_code, 302)
+
+            resp = c.get("/", follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("test1_first", html)
+            self.assertIn("test1_last", html)
+
+    def test_add_new_user(self):
+        with app.test_client() as c:
+            data = {
+                "firstName": "John"
+            }
+
+            resp = c.post("/users/new", data=data, follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("John", html)
+
+            data = {
+                "firstName": "John",
+                "lastName": "Smith"
+            }
+
+            resp = c.post("/users/new", data=data, follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("John", html)
+            self.assertIn("Smith", html)

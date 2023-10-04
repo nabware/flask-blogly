@@ -19,8 +19,8 @@
   <input type="text" name="imageURL" placeholder="Provide an image of this user" value="{{user.image_url}}">
   <br>
 
-  <button type="submit">Cancel</button>
-  <button type="submit">Add</button>
+  <a href="/users/{{ user.id }}">Cancel</a>
+  <button type="submit">Save</button>
 </form>
 
 {% endblock %}
