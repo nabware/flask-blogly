@@ -51,6 +51,8 @@ class UserViewTestCase(TestCase):
         db.session.rollback()
 
     def test_list_users(self):
+        """Test list users page"""
+
         with app.test_client() as c:
             resp = c.get("/users")
             self.assertEqual(resp.status_code, 200)
@@ -59,6 +61,8 @@ class UserViewTestCase(TestCase):
             self.assertIn("test1_last", html)
 
     def test_home_page(self):
+        """Test home page"""
+
         with app.test_client() as c:
             resp = c.get("/")
 
@@ -72,6 +76,8 @@ class UserViewTestCase(TestCase):
             self.assertIn("test1_last", html)
 
     def test_add_new_user(self):
+        """Test add new user"""
+
         with app.test_client() as c:
             data = {
                 "firstName": "John"
@@ -97,9 +103,9 @@ class UserViewTestCase(TestCase):
 
 
     def test_delete_user(self):
+        """Test delete user"""
+
         with app.test_client() as c:
-
-
             resp = c.post(f"/users/{self.user_id}/delete", follow_redirects=True)
 
             self.assertEqual(resp.status_code, 200)

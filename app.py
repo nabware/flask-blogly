@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 from models import db, connect_db, User
 from flask_debugtoolbar import DebugToolbarExtension
 
@@ -60,6 +60,7 @@ def add_new_user():
     try:
         db.session.commit()
     except:
+        flash(f"Invalid first or last name.")
         return redirect(f"/users/new?firstName={first_name}&lastName={last_name}&imageURL={image_url}")
 
     return redirect("/users")
@@ -96,7 +97,12 @@ def edit_user(user_id):
     user.last_name = last_name
     user.image_url = image_url
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except:
+        flash(f"Invalid first or last name.")
+        # return render_template("edit.html", user=user)
+        return redirect(f"/users/{user_id}/edit?firstName={first_name}&lastName={last_name}&imageURL={image_url}")
 
     return redirect(f"/users/{user_id}")
 
