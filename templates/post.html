@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}User Detail Page{% endblock %}
+
+{% block content %}
+
+<!-- {% for message in get_flashed_messages() %}
+<p>{{ message }}</p>
+{% endfor %} -->
+
+
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+
+<h3>By {{post.user.first_name}} {{post.user.last_name}}</h3>
+
+<form>
+  <button type="submit" formaction="/users/{{ post.user.id }}" formmethod="GET">Cancel</button>
+  <button type="submit" formmethod="POST">Edit</button>
+  <button type="submit" formmethod="POST">Delete</button>
+</form>
+
+{% endblock %}

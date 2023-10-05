@@ -151,3 +151,11 @@ def add_new_post(user_id):
     flash("New post successfully added!")
 
     return redirect(f"/users/{user_id}")
+
+@app.get("/posts/<post_id>")
+def show_a_post(post_id):
+    """Show a post"""
+
+    post = Post.query.get_or_404(post_id)
+
+    return render_template('post.html', post = post)
