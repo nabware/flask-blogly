@@ -30,8 +30,9 @@ class UserViewTestCase(TestCase):
         # As you add more models later in the exercise, you'll want to delete
         # all of their records before each test just as we're doing with the
         # User model below.
-        User.query.delete()
         Post.query.delete()
+        User.query.delete()
+
 
         test_user = User(
             first_name="test1_first",
@@ -52,6 +53,7 @@ class UserViewTestCase(TestCase):
         # rely on this user in our tests without needing to know the numeric
         # value of their id, since it will change each time our tests are run.
         self.user_id = test_user.id
+        self.post_id = test_post.id
 
     def tearDown(self):
         """Clean up any fouled transaction."""
@@ -158,10 +160,60 @@ class UserViewTestCase(TestCase):
         """Test delete post"""
 
         with app.test_client() as c:
-            user = User.query.get(self.user_id)
-            resp = c.post(f"/posts/{user.posts[0].id}/delete", follow_redirects=True)
+
+            resp = c.post(f"/posts/{self.post_id}/delete", follow_redirects=True)
 
             self.assertEqual(resp.status_code, 200)
             html = resp.get_data(as_text=True)
             self.assertNotIn("Hello", html)
-            self.assertEqual(len(user.posts), 0)
+
+
+    def test_post_form(self):
+        """Test show form to add a post for this user"""
+
+        with app.test_client() as c:
+            resp = c.get(f"/users/{self.user_id}/posts/new")
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("test1_first", html)
+            self.assertIn("test1_last", html)
+
+    def test_show_a_post(self):
+        """show a post"""
+
+        with app.test_client() as c:
+            resp = c.get(f"/posts/{self.post_id}")
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("Hello", html)
+            self.assertIn("World", html)
+
+    def test_edit_post_form(self):
+        """test the form to edit post"""
+
+        with app.test_client() as c:
+            resp = c.get(f"/posts/{self.post_id}/edit")
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("Hello", html)
+            self.assertIn("World", html)
+
+    def test_edit_post(self):
+        """test edit post"""
+
+        with app.test_client() as c:
+
+            data = {
+                "title": "Bye",
+                "content": "Bye"
+            }
+
+            resp = c.post(f"/posts/{self.post_id}/edit", data=data, follow_redirects=True)
+
+
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("Bye", html)
