@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}User Detail Page{% endblock %}
+{% block title %}Post Page{% endblock %}
 
 {% block content %}
 
-<!-- {% for message in get_flashed_messages() %}
+{% for message in get_flashed_messages() %}
 <p>{{ message }}</p>
-{% endfor %} -->
+{% endfor %}
 
 
 <h1>{{ post.title }}</h1>
@@ -16,8 +16,8 @@
 
 <form>
   <button type="submit" formaction="/users/{{ post.user.id }}" formmethod="GET">Cancel</button>
-  <button type="submit" formmethod="POST">Edit</button>
-  <button type="submit" formmethod="POST">Delete</button>
+  <button type="submit" formaction="/posts/{{ post.id }}/edit" formmethod="GET">Edit</button>
+  <button type="submit" formaction="/posts/{{ post.id }}/delete" formmethod="POST">Delete</button>
 </form>
 
 {% endblock %}
