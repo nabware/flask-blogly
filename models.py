@@ -56,6 +56,7 @@ class Post(db.Model):
 
     content = db.Column(
         db.Text,
+        db.CheckConstraint('LENGTH(content) >= 2'),
         nullable=False)
 
     created_at = db.Column(
