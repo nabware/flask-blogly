@@ -4,13 +4,16 @@
 
 {% block content %}
 
+{% for message in get_flashed_messages() %}
+  <p>{{ message }}</p>
+{% endfor %}
+
 <img src="{{ user.image_url }}">
 <h1>{{ user.first_name }} {{ user.last_name }}</h1>
 
-<a href="/users/{{ user.id }}/edit">Edit</a>
-
-<form action="/users/{{user.id}}/delete" method="POST">
-  <button type="submit">Delete</button>
+<form>
+  <button type="submit" formaction="/users/{{ user.id }}/edit" formmethod="GET">Edit</button>
+  <button type="submit" formaction="/users/{{ user.id }}/delete" formmethod="POST">Delete</button>
 </form>
 
 {% endblock %}

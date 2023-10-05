@@ -4,27 +4,23 @@
 
 {% block content %}
 
-{% for message in get_flashed_messages() %}
-  <p>{{ message }}</p>
-{% endfor %}
-
 <h1>Edit a user</h1>
 
-<form action="/users/{{user.id}}/edit" method="POST">
-  <label>First Name</label>
-  <input type="text" name="firstName" placeholder="Enter a first name" value="{{ request.args.get('firstName', user.first_name) }}">
+<form>
+  <label for="first_name">First Name</label>
+  <input type="text" id="first_name" name="first_name" placeholder="Enter a first name" value="{{ user.first_name }}">
   <br>
 
-  <label>Last Name</label>
-  <input type="text" name="lastName" placeholder="Enter a last name" value="{{ request.args.get('lastName', user.last_name) }}">
+  <label for="last_name">Last Name</label>
+  <input type="text" id="last_name" name="last_name" placeholder="Enter a last name" value="{{ user.last_name }}">
   <br>
 
-  <label>Image URL</label>
-  <input type="text" name="imageURL" placeholder="Provide an image of this user" value="{{ request.args.get('imageURL', user.image_url) }}">
+  <label for="image_url">Image URL</label>
+  <input type="text" id="image_url" name="image_url" placeholder="Provide an image of this user" value="{{ user.image_url }}">
   <br>
 
-  <a href="/users/{{ user.id }}">Cancel</a>
-  <button type="submit">Save</button>
+  <button type="submit" formaction="/users/{{ user.id }}" formmethod="GET">Cancel</button>
+  <button type="submit" formaction="/users/{{ user.id }}/edit" formmethod="POST">Save</button>
 </form>
 
 {% endblock %}

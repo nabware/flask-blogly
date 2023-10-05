@@ -4,23 +4,19 @@
 
 {% block content %}
 
-{% for message in get_flashed_messages() %}
-  <p>{{ message }}</p>
-{% endfor %}
-
 <h1>Create a user</h1>
 
 <form action="/users/new" method="POST">
-  <label>First Name</label>
-  <input type="text" name="firstName" placeholder="Enter a first name" value="{{ request.args.get('firstName', '') }}">
+  <label for="first_name">First Name</label>
+  <input type="text" id="first_name" name="first_name" placeholder="Enter a first name">
   <br>
 
-  <label>Last Name</label>
-  <input type="text" name="lastName" placeholder="Enter a last name" value="{{ request.args.get('lastName', '') }}">
+  <label for="last_name">Last Name</label>
+  <input type="text" id="last_name" name="last_name" placeholder="Enter a last name">
   <br>
 
-  <label>Image URL</label>
-  <input type="text" name="imageURL" placeholder="Provide an image of this user" value="{{ request.args.get('imageURL', '') }}">
+  <label for="image_url">Image URL</label>
+  <input type="text" id="image_url" name="image_url" placeholder="Provide an image of this user">
   <br>
 
   <button type="submit">Add</button>

@@ -3,7 +3,7 @@
 import os
 
 from flask import Flask, render_template, redirect, request, flash
-from models import db, connect_db, User
+from models import db, connect_db, User, DEFAULT_IMAGE_URL
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -28,7 +28,7 @@ def home():
 @app.get("/users")
 def users():
     """render all existing users to the home page"""
-
+    # pull by firstname or lastname or both, User.query.order_by().all()
     users = User.query.all()
 
     return render_template("users.html", users=users)
@@ -45,9 +45,9 @@ def new_user_form():
 def add_new_user():
     """Adds new user"""
 
-    first_name = request.form.get("firstName")
-    last_name = request.form.get("lastName")
-    image_url = request.form.get("imageURL")
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    image_url = request.form["image_url"] or None
 
     new_user = User(
         first_name=first_name,
@@ -56,12 +56,15 @@ def add_new_user():
     )
 
     db.session.add(new_user)
+    db.session.commit()
 
-    try:
-        db.session.commit()
-    except:
-        flash(f"Invalid first or last name.")
-        return redirect(f"/users/new?firstName={first_name}&lastName={last_name}&imageURL={image_url}")
+    # try:
+    #     db.session.commit()
+    # except:
+    #     flash(f"Invalid first or last name.")
+    #     return redirect(f"/users/new?firstName={first_name}&lastName={last_name}&imageURL={image_url}")
+
+    flash(f"Successfully added new user!")
 
     return redirect("/users")
 
@@ -88,21 +91,24 @@ def edit_user_form(user_id):
 def edit_user(user_id):
     """Process the edit form, returning the user to the /users page."""
 
-    first_name = request.form.get("firstName")
-    last_name = request.form.get("lastName")
-    image_url = request.form.get("imageURL")
+    first_name = request.form["first_name"]
+    last_name = request.form["last_name"]
+    image_url = request.form["image_url"]
 
     user = User.query.get_or_404(user_id)
     user.first_name = first_name
     user.last_name = last_name
-    user.image_url = image_url
+    user.image_url = image_url if image_url else DEFAULT_IMAGE_URL
 
-    try:
-        db.session.commit()
-    except:
-        flash(f"Invalid first or last name.")
-        # return render_template("edit.html", user=user)
-        return redirect(f"/users/{user_id}/edit?firstName={first_name}&lastName={last_name}&imageURL={image_url}")
+    db.session.commit()
+
+    # try:
+    #     db.session.commit()
+    # except:
+    #     flash(f"Invalid first or last name.")
+    #     return redirect(f"/users/{user_id}/edit?firstName={first_name}&lastName={last_name}&imageURL={image_url}")
+
+    flash("Successfully updated user profile!")
 
     return redirect(f"/users/{user_id}")
 
