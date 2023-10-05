@@ -1,8 +1,10 @@
 """Models for Blogly."""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 db = SQLAlchemy()
 DEFAULT_IMAGE_URL = 'https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg'
+
 
 def connect_db(app):
     """Connect to database."""
@@ -10,6 +12,7 @@ def connect_db(app):
     app.app_context().push()
     db.app = app
     db.init_app(app)
+
 
 class User(db.Model):
     """User"""
@@ -36,8 +39,6 @@ class User(db.Model):
         default=DEFAULT_IMAGE_URL)
 
 
-
-
 class Post(db.Model):
     """Post"""
 
@@ -60,12 +61,11 @@ class Post(db.Model):
     created_at = db.Column(
         db.DateTime,
         nullable=False,
-        default=datetime.utcnow)
-        #time check
+        default=datetime.now())
 
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id')
-        )
+    )
 
-    user = db.relationship('User', backref = 'posts')
+    user = db.relationship('User', backref='posts')

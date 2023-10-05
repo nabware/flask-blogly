@@ -16,6 +16,8 @@
   <button type="submit" formaction="/users/{{ user.id }}/delete" formmethod="POST">Delete</button>
 </form>
 
-
+<form action="/users/{{ user.id }}/posts/new">
+  <button type="submit">Add Post</button>
+</form>
 
 {% endblock %}

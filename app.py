@@ -3,7 +3,7 @@
 import os
 
 from flask import Flask, render_template, redirect, request, flash
-from models import db, connect_db, User, DEFAULT_IMAGE_URL
+from models import db, connect_db, User, DEFAULT_IMAGE_URL, Post
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -123,3 +123,31 @@ def delete_user(user_id):
     db.session.commit()
 
     return redirect('/users')
+
+
+@app.get("/users/<int:user_id>/posts/new")
+def new_post_form_handler(user_id):
+    """Show form to add a post for that user."""
+
+    user = User.query.get_or_404(user_id)
+
+    return render_template("new-post-form.html", user=user)
+
+
+@app.post("/users/<int:user_id>/posts/new")
+def add_new_post(user_id):
+    """Handle add form; add post and redirect to the user detail page."""
+
+    title = request.form["title"]
+    content = request.form["content"]
+
+    user = User.query.get_or_404(user_id)
+    post = Post(title=title, content=content, user_id=user.id)
+
+    user.posts.append(post)
+
+    db.session.commit()
+
+    flash("New post successfully added!")
+
+    return redirect(f"/users/{user_id}")
