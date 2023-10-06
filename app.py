@@ -119,6 +119,12 @@ def delete_user(user_id):
 
     user = User.query.get_or_404(user_id)
 
+    # user.posts.clear()
+    # db.session.commit()
+
+    for post in user.posts:
+        db.session.delete(post)
+
     db.session.delete(user)
     db.session.commit()
 
