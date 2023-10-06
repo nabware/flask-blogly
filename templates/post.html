@@ -7,6 +7,7 @@
 {% for message in get_flashed_messages() %}
 <p>{{ message }}</p>
 {% endfor %}
+<!-- put flash message in base.html -->
 
 
 <h1>{{ post.title }}</h1>
@@ -19,5 +20,6 @@
   <button type="submit" formaction="/posts/{{ post.id }}/edit" formmethod="GET">Edit</button>
   <button type="submit" formaction="/posts/{{ post.id }}/delete" formmethod="POST">Delete</button>
 </form>
+<!-- line over bar -->
 
 {% endblock %}

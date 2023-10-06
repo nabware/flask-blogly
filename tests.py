@@ -30,7 +30,7 @@ class UserViewTestCase(TestCase):
         # As you add more models later in the exercise, you'll want to delete
         # all of their records before each test just as we're doing with the
         # User model below.
-        Post.query.delete()
+        Post.query.delete()#
         User.query.delete()
 
 
@@ -130,7 +130,6 @@ class UserViewTestCase(TestCase):
         """Test delete user"""
 
         with app.test_client() as c:
-            Post.query.delete() # delete all posts
 
             resp = c.post(f"/users/{self.user_id}/delete", follow_redirects=True)
 
@@ -155,6 +154,7 @@ class UserViewTestCase(TestCase):
             html = resp.get_data(as_text=True)
             self.assertIn("Bye", html)
             self.assertEqual(len(user.posts), 2)
+            # TODO:test if both posts on the page
 
     def test_delete_post(self):
         """Test delete post"""
@@ -181,6 +181,7 @@ class UserViewTestCase(TestCase):
 
     def test_show_a_post(self):
         """show a post"""
+        # TODO:seperate to another test for failure test_show_a_post_invalid
 
         with app.test_client() as c:
             resp = c.get(f"/posts/{self.post_id}")
@@ -200,6 +201,7 @@ class UserViewTestCase(TestCase):
             html = resp.get_data(as_text=True)
             self.assertIn("Hello", html)
             self.assertIn("World", html)
+            # TODO:make the content of the post more clear what it's testing
 
     def test_edit_post(self):
         """test edit post"""
@@ -213,7 +215,8 @@ class UserViewTestCase(TestCase):
 
             resp = c.post(f"/posts/{self.post_id}/edit", data=data, follow_redirects=True)
 
-
             self.assertEqual(resp.status_code, 200)
             html = resp.get_data(as_text=True)
             self.assertIn("Bye", html)
+
+    # TODO:test the 404s, not just the 200s, try -1 for the 404

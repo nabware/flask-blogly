@@ -138,10 +138,11 @@ def new_post_form_handler(user_id):
 def add_new_post(user_id):
     """Handle add form; add post and redirect to the user detail page."""
 
+    user = User.query.get_or_404(user_id)
+
     title = request.form["title"]
     content = request.form["content"]
 
-    user = User.query.get_or_404(user_id)
     post = Post(title=title, content=content, user_id=user.id)
 
     user.posts.append(post)
@@ -175,10 +176,11 @@ def edit_post_form(post_id):
 def edit_post(post_id):
     """Handle editing of a post. Redirect back to the post view."""
 
+    post = Post.query.get_or_404(post_id)
+
     title = request.form["title"]
     content = request.form["content"]
 
-    post = Post.query.get_or_404(post_id)
     post.title = title
     post.content = content
 
@@ -194,11 +196,11 @@ def delete_post(post_id):
     """Delete the post."""
 
     post = Post.query.get_or_404(post_id)
-    user_id = post.user.id
+    # user_id = post.user.id
 
     db.session.delete(post)
     db.session.commit()
 
     flash(f"Post has been deleted!")
 
-    return redirect(f"/users/{ user_id }")
+    return redirect(f"/users/{ post.user_id }")
